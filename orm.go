@@ -2,6 +2,8 @@ package orm
 
 import (
 	"database/sql"
+	"errors"
+	"go-ORM/dialect"
 	"go-ORM/log"
 	"go-ORM/session"
 )
@@ -13,6 +15,11 @@ import (
 
 type Engine struct {
 	db *sql.DB
+
+	// +
+	dialect dialect.Dialect
+
+
 }
 // NewDB 开启一个数据库连接
 func NewDB(driver, source string) ( *Engine, error) {
@@ -27,8 +34,16 @@ func NewDB(driver, source string) ( *Engine, error) {
 		log.Error(err)
 		return nil, err
 	}
+
+	// make sure the specific dialect exists
+	dial, ok := dialect.GetDialect(driver)
+	if !ok {
+		log.Errorf("dialect %s Not Found", driver)
+		return nil, errors.New("dialect not found")
+	}
+
 	// 返回
-	e := &Engine{db: db}
+	e := &Engine{db: db, dialect: dial}
 	log.Info("Connect database success")
 	return e, nil
 
@@ -45,6 +60,6 @@ func (engine *Engine) Close()  {
 // NewSession 开启一个关联
 func (engine *Engine) NewSession() *session.Session  {
 	// 返回个session
-	return session.New(engine.db)
+	return session.New(engine.db, engine.dialect)
 }
 

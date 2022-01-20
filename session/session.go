@@ -2,7 +2,9 @@ package session
 
 import (
 	"database/sql"
+	"go-ORM/dialect"
 	"go-ORM/log"
+	"go-ORM/schema"
 	"strings"
 )
 
@@ -12,11 +14,17 @@ type Session struct {
 	db *sql.DB
 	sql strings.Builder // strings.Builder 用来高效拼接字符串
 	sqlVals []interface{}
+
+	// +
+	dialect  dialect.Dialect
+	refTable *schema.Schema
+	// +
+
 }
 
 // New 开启一个session
-func New(db *sql.DB) *Session {
-	return &Session{ db: db }
+func New(db *sql.DB, d dialect.Dialect) *Session {
+	return &Session{ db: db, dialect: d}
 }
 
 // DB returns *sql.DB

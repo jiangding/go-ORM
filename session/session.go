@@ -2,6 +2,7 @@ package session
 
 import (
 	"database/sql"
+	"go-ORM/clause"
 	"go-ORM/dialect"
 	"go-ORM/log"
 	"go-ORM/schema"
@@ -18,7 +19,11 @@ type Session struct {
 	// +
 	dialect  dialect.Dialect
 	refTable *schema.Schema
-	// +
+
+
+	//+
+	clause clause.Clause
+
 
 }
 
@@ -44,6 +49,10 @@ func (s *Session) Raw(sql string, values ...interface{}) *Session {
 func (s *Session) Clear() {
 	s.sql.Reset() // 清空Builder
 	s.sqlVals = nil // 清空slice
+
+	// + 清空clause
+	s.clause = clause.Clause{}
+
 }
 
 

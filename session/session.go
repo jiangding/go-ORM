@@ -2,7 +2,7 @@ package session
 
 import (
 	"database/sql"
-	"log"
+	"go-ORM/log"
 	"strings"
 )
 
@@ -42,9 +42,9 @@ func (s *Session) Clear() {
 // Exec raw sql with sqlVars
 func (s *Session) Exec() (result sql.Result, err error){
 	defer s.Clear()
-	log.Println(s.sql.String(), s.sqlVals)
+	log.Info(s.sql.String(), s.sqlVals)
 	if result, err = s.DB().Exec(s.sql.String(), s.sqlVals...); err != nil {
-		log.Println(err)
+		log.Error(err)
 	}
 	return
 }
@@ -52,16 +52,16 @@ func (s *Session) Exec() (result sql.Result, err error){
 // QueryRow gets a record from db
 func (s *Session) QueryRow() *sql.Row {
 	defer s.Clear()
-	log.Println(s.sql.String(), s.sqlVals)
+	log.Info(s.sql.String(), s.sqlVals)
 	return s.DB().QueryRow(s.sql.String(), s.sqlVals...)
 }
 
 // QueryRows gets a list of records from db
 func (s *Session) QueryRows() (rows *sql.Rows, err error) {
 	defer s.Clear()
-	log.Println(s.sql.String(), s.sqlVals)
+	log.Info(s.sql.String(), s.sqlVals)
 	if rows, err = s.DB().Query(s.sql.String(), s.sqlVals...); err != nil {
-		log.Println(err)
+		log.Error(err)
 	}
 	return
 }

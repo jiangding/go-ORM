@@ -2,8 +2,8 @@ package orm
 
 import (
 	"database/sql"
+	"go-ORM/log"
 	"go-ORM/session"
-	"log"
 )
 
 // 连接/测试数据库
@@ -18,18 +18,18 @@ type Engine struct {
 func NewDB(driver, source string) ( *Engine, error) {
 	db, err := sql.Open(driver, source)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 		return nil, err
 	}
 
 	// Send a ping to make sure the database connection is alive.
 	if err := db.Ping(); err != nil {
-		log.Println(err)
+		log.Error(err)
 		return nil, err
 	}
 	// 返回
 	e := &Engine{db: db}
-	log.Println("Connect database success")
+	log.Info("Connect database success")
 	return e, nil
 
 }
@@ -37,9 +37,9 @@ func NewDB(driver, source string) ( *Engine, error) {
 // Close 关闭数据库连接
 func (engine *Engine) Close()  {
 	if err := engine.db.Close(); err != nil {
-		log.Println("Failed to close database")
+		log.Error("Failed to close database")
 	}
-	log.Println("closed database success")
+	log.Info("closed database success")
 }
 
 // NewSession 开启一个关联

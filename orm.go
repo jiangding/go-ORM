@@ -2,6 +2,7 @@ package orm
 
 import (
 	"database/sql"
+	"go-ORM/session"
 	"log"
 )
 
@@ -41,5 +42,9 @@ func (engine *Engine) Close()  {
 	log.Println("closed database success")
 }
 
-//
+// NewSession 开启一个关联
+func (engine *Engine) NewSession() *session.Session  {
+	// 返回个session
+	return session.New(engine.db)
+}
 
